@@ -15,11 +15,20 @@ Pair<double, double> Amount5 = Pair.Create(0.0, 0.0); // Offset
 ColorBgra Amount6 = ColorBgra.FromBgr(0, 0, 0); // Background Color
 #endregion
 
+void InvalidFontMessage(string msg, string caption)
+{
+    PaintDotNet.Threading.PdnSynchronizationContext.Instance.Send(
+        new System.Threading.SendOrPostCallback(delegate (object state)
+        {
+            System.Windows.Forms.MessageBox.Show(msg, caption);
+        }), null);
+}
+
 void Render(Surface dst, Surface src, Rectangle rect)
 {
     if (!Amount4.IsStyleAvailable(FontStyle.Regular))
     {
-        MessageBox.Show("You can not use the font '" + this.Amount4.Name + "'.\n\nPlease choose a different font.", "Font Error");
+        InvalidFontMessage("You can not use the font '" + this.Amount4.Name + "'.\n\nPlease choose a different font.", "Font Error");
         Amount4 = new FontFamily("Arial");
     }
 
