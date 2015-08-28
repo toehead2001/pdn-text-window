@@ -28,7 +28,7 @@ void Render(Surface dst, Surface src, Rectangle rect)
     Bitmap windowBitmap = new Bitmap(selection.Width, selection.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
     Graphics g = Graphics.FromImage(windowBitmap);
 
-    Rectangle backgroundRect = new Rectangle((int)Amount5.First, 0, selection.Width, selection.Height);
+    Rectangle backgroundRect = new Rectangle(0, 0, selection.Width, selection.Height);
     g.FillRectangle(new SolidBrush(Color.White), backgroundRect);
 
     RectangleF textRect = new RectangleF((float)Amount5.First * selection.Width, (float)Amount5.Second * selection.Height, selection.Width, selection.Height);
