@@ -1,7 +1,7 @@
 ﻿// Name: Text Window
 // Submenu: Text Formations
 // Author: toe_head2001
-// Title: Text Window
+// Title: 
 // Desc: 
 // Keywords: Text|Transparent
 // URL: http://www.getpaint.net/redirect/plugins.html
@@ -34,11 +34,8 @@ void Render(Surface dst, Surface src, Rectangle rect)
 
     Rectangle selection = EnvironmentParameters.GetSelection(src.Bounds).GetBoundsInt();
 
-    Bitmap windowBitmap = new Bitmap(selection.Width, selection.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-    Graphics g = Graphics.FromImage(windowBitmap);
-
-    Rectangle backgroundRect = new Rectangle(0, 0, selection.Width, selection.Height);
-    g.FillRectangle(new SolidBrush(Color.White), backgroundRect);
+    Bitmap textBitmap = new Bitmap(selection.Width, selection.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+    Graphics g = Graphics.FromImage(textBitmap);
 
     RectangleF textRect = new RectangleF((float)Amount5.First * selection.Width, (float)Amount5.Second * selection.Height, selection.Width, selection.Height);
     Font font = new Font(Amount4, Amount3);
@@ -53,34 +50,19 @@ void Render(Surface dst, Surface src, Rectangle rect)
 
     g.DrawString(textRepeated.ToString(), font, new SolidBrush(Color.Black), textRect);
 
-    Surface windowSurface = Surface.CopyFromBitmap(windowBitmap);
+    Surface textSurface = Surface.CopyFromBitmap(textBitmap);
 
-    ColorBgra CurrentPixel;
-    double alpha;
+    ColorBgra CurrentPixel = new ColorBgra();
+    ColorBgra textPixel;
 
     for (int y = rect.Top; y < rect.Bottom; y++)
     {
         if (IsCancelRequested) return;
         for (int x = rect.Left; x < rect.Right; x++)
         {
-            CurrentPixel = windowSurface.GetBilinearSample((x - selection.Left), (y - selection.Top));
-
-            alpha = 0.59 * Math.Sqrt(CurrentPixel.R * CurrentPixel.R + CurrentPixel.G * CurrentPixel.G + CurrentPixel.B * CurrentPixel.B);
-
-            if (alpha <= 0)
-                CurrentPixel.A = 0;
-
-            else if (alpha < CurrentPixel.A)
-            {
-                CurrentPixel.A = (byte)alpha;
-
-                alpha = alpha / 255;
-
-                CurrentPixel.R = Int32Util.ClampToByte((int)(CurrentPixel.R / alpha));
-                CurrentPixel.G = Int32Util.ClampToByte((int)(CurrentPixel.G / alpha));
-                CurrentPixel.B = Int32Util.ClampToByte((int)(CurrentPixel.B / alpha));
-            }
-
+            textPixel = textSurface.GetBilinearSample((x - selection.Left), (y - selection.Top));
+            
+            CurrentPixel.A = Int32Util.ClampToByte((int)(255 - textPixel.A));
             CurrentPixel.R = Amount6.R;
             CurrentPixel.G = Amount6.G;
             CurrentPixel.B = Amount6.B;
