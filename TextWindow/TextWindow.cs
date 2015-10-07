@@ -172,6 +172,33 @@ namespace TextWindowEffect
             Amount10 = ColorBgra.FromOpaqueInt32(newToken.GetProperty<Int32Property>(PropertyNames.Amount10).Value);
 
             base.OnSetRenderInfo(newToken, dstArgs, srcArgs);
+
+
+            if (!Amount4.IsStyleAvailable(FontStyle.Regular))
+            {
+                InvalidFontMessage("You can not use the font '" + this.Amount4.Name + "'.\n\nPlease choose a different font.", "Font Error");
+                Amount4 = new FontFamily("Arial");
+            }
+
+            Rectangle selection = EnvironmentParameters.GetSelection(srcArgs.Surface.Bounds).GetBoundsInt();
+
+            Bitmap textBitmap = new Bitmap(selection.Width, selection.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            Graphics g = Graphics.FromImage(textBitmap);
+
+            RectangleF textRect = new RectangleF((float)Amount9.First * selection.Width, (float)Amount9.Second * selection.Height, selection.Width, selection.Height);
+            Font font = new Font(Amount4, Amount3, fontStyles());
+            g.TextRenderingHint = TextRenderingHint.AntiAlias;
+
+            string text = Amount1 + " ";
+            System.Text.StringBuilder textRepeated = new System.Text.StringBuilder();
+            for (int i = 0; i < Amount2; i++)
+            {
+                textRepeated.Append(text);
+            }
+
+            g.DrawString(textRepeated.ToString(), font, new SolidBrush(Color.Black), textRect);
+
+            textSurface = Surface.CopyFromBitmap(textBitmap);
         }
 
         protected override unsafe void OnRender(Rectangle[] rois, int startIndex, int length)
@@ -251,33 +278,11 @@ namespace TextWindowEffect
             return styles;
         }
 
+        private Surface textSurface;
+
         void Render(Surface dst, Surface src, Rectangle rect)
         {
-            if (!Amount4.IsStyleAvailable(FontStyle.Regular))
-            {
-                InvalidFontMessage("You can not use the font '" + this.Amount4.Name + "'.\n\nPlease choose a different font.", "Font Error");
-                Amount4 = new FontFamily("Arial");
-            }
-
             Rectangle selection = EnvironmentParameters.GetSelection(src.Bounds).GetBoundsInt();
-
-            Bitmap textBitmap = new Bitmap(selection.Width, selection.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            Graphics g = Graphics.FromImage(textBitmap);
-
-            RectangleF textRect = new RectangleF((float)Amount9.First * selection.Width, (float)Amount9.Second * selection.Height, selection.Width, selection.Height);
-            Font font = new Font(Amount4, Amount3, fontStyles());
-            g.TextRenderingHint = TextRenderingHint.AntiAlias;
-
-            string text = Amount1 + " ";
-            System.Text.StringBuilder textRepeated = new System.Text.StringBuilder();
-            for (int i = 0; i < Amount2; i++)
-            {
-                textRepeated.Append(text);
-            }
-
-            g.DrawString(textRepeated.ToString(), font, new SolidBrush(Color.Black), textRect);
-
-            Surface textSurface = Surface.CopyFromBitmap(textBitmap);
 
             ColorBgra CurrentPixel = new ColorBgra();
             ColorBgra textPixel;
