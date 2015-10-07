@@ -11,12 +11,12 @@ string Amount1 = ""; // [0,255] Text
 int Amount2 = 100; // [1,1000] Text Repeat
 int Amount3 = 12; // [6,250] Font Size
 FontFamily Amount4 = new FontFamily("Arial"); // Font
-Pair<double, double> Amount5 = Pair.Create(0.0, 0.0); // Offset
-ColorBgra Amount6 = ColorBgra.FromBgr(0, 0, 0); // Background Color
-bool Amount7 = false; // [0,1] Bold
-bool Amount8 = false; // [0,1] Italic
-bool Amount9 = false; // [0,1] Underline
-bool Amount10 = false; // [0,1] Strikeout
+bool Amount5 = false; // [0,1] Bold
+bool Amount6 = false; // [0,1] Italic
+bool Amount7 = false; // [0,1] Underline
+bool Amount8 = false; // [0,1] Strikeout
+Pair<double, double> Amount9 = Pair.Create(0.0, 0.0); // Offset
+ColorBgra Amount10 = ColorBgra.FromBgr(0, 0, 0); // Background Color
 #endregion
 
 void InvalidFontMessage(string msg, string caption)
@@ -31,13 +31,13 @@ void InvalidFontMessage(string msg, string caption)
 private FontStyle fontStyles()
 {
     List<FontStyle> styleList = new List<FontStyle>();
-    if (Amount7)
+    if (Amount5)
         styleList.Add(FontStyle.Bold);
-    if (Amount8)
+    if (Amount6)
         styleList.Add(FontStyle.Italic);
-    if (Amount9)
+    if (Amount7)
         styleList.Add(FontStyle.Underline);
-    if (Amount10)
+    if (Amount8)
         styleList.Add(FontStyle.Strikeout);
 
     FontStyle styles;
@@ -78,7 +78,7 @@ void Render(Surface dst, Surface src, Rectangle rect)
     Bitmap textBitmap = new Bitmap(selection.Width, selection.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
     Graphics g = Graphics.FromImage(textBitmap);
 
-    RectangleF textRect = new RectangleF((float)Amount5.First * selection.Width, (float)Amount5.Second * selection.Height, selection.Width, selection.Height);
+    RectangleF textRect = new RectangleF((float)Amount9.First * selection.Width, (float)Amount9.Second * selection.Height, selection.Width, selection.Height);
     Font font = new Font(Amount4, Amount3, fontStyles());
     g.TextRenderingHint = TextRenderingHint.AntiAlias;
 
@@ -102,11 +102,11 @@ void Render(Surface dst, Surface src, Rectangle rect)
         for (int x = rect.Left; x < rect.Right; x++)
         {
             textPixel = textSurface.GetBilinearSample((x - selection.Left), (y - selection.Top));
-            
+
             CurrentPixel.A = Int32Util.ClampToByte((int)(255 - textPixel.A));
-            CurrentPixel.R = Amount6.R;
-            CurrentPixel.G = Amount6.G;
-            CurrentPixel.B = Amount6.B;
+            CurrentPixel.R = Amount10.R;
+            CurrentPixel.G = Amount10.G;
+            CurrentPixel.B = Amount10.B;
 
             dst[x, y] = CurrentPixel;
         }
