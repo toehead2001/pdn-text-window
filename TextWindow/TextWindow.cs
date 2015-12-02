@@ -184,10 +184,9 @@ namespace TextWindowEffect
 
             Bitmap textBitmap = new Bitmap(selection.Width, selection.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             Graphics g = Graphics.FromImage(textBitmap);
-
-            RectangleF textRect = new RectangleF((float)Amount9.First * selection.Width, (float)Amount9.Second * selection.Height, selection.Width, selection.Height);
-            Font font = new Font(Amount4, Amount3, fontStyles());
             g.TextRenderingHint = TextRenderingHint.AntiAlias;
+
+            RectangleF textRect = new RectangleF((float)Amount9.First * selection.Width, (float)Amount9.Second * selection.Height, selection.Width, selection.Height); 
 
             string text = Amount1 + " ";
             System.Text.StringBuilder textRepeated = new System.Text.StringBuilder();
@@ -196,9 +195,14 @@ namespace TextWindowEffect
                 textRepeated.Append(text);
             }
 
-            g.DrawString(textRepeated.ToString(), font, new SolidBrush(Color.Black), textRect);
+            using (SolidBrush fontBrush = new SolidBrush(Color.Black))
+            using (Font font = new Font(Amount4, Amount3, fontStyles()))
+            {
+                g.DrawString(textRepeated.ToString(), font, fontBrush, textRect);
+            }
 
             textSurface = Surface.CopyFromBitmap(textBitmap);
+            textBitmap.Dispose();
         }
 
         protected override unsafe void OnRender(Rectangle[] rois, int startIndex, int length)
@@ -284,7 +288,7 @@ namespace TextWindowEffect
         {
             Rectangle selection = EnvironmentParameters.GetSelection(src.Bounds).GetBoundsInt();
 
-            ColorBgra CurrentPixel = new ColorBgra();
+            ColorBgra CurrentPixel = Amount10;
             ColorBgra textPixel;
 
             for (int y = rect.Top; y < rect.Bottom; y++)
@@ -292,12 +296,9 @@ namespace TextWindowEffect
                 if (IsCancelRequested) return;
                 for (int x = rect.Left; x < rect.Right; x++)
                 {
-                    textPixel = textSurface.GetBilinearSample((x - selection.Left), (y - selection.Top));
+                    textPixel = textSurface.GetBilinearSample(x - selection.Left, y - selection.Top);
 
-                    CurrentPixel.A = Int32Util.ClampToByte((int)(255 - textPixel.A));
-                    CurrentPixel.R = Amount10.R;
-                    CurrentPixel.G = Amount10.G;
-                    CurrentPixel.B = Amount10.B;
+                    CurrentPixel.A = Int32Util.ClampToByte(255 - textPixel.A);
 
                     dst[x, y] = CurrentPixel;
                 }
