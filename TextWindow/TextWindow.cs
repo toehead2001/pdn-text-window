@@ -171,8 +171,6 @@ namespace TextWindowEffect
             Amount9 = newToken.GetProperty<DoubleVectorProperty>(PropertyNames.Amount9).Value;
             Amount10 = ColorBgra.FromOpaqueInt32(newToken.GetProperty<Int32Property>(PropertyNames.Amount10).Value);
 
-            base.OnSetRenderInfo(newToken, dstArgs, srcArgs);
-
 
             if (!Amount4.IsStyleAvailable(FontStyle.Regular))
             {
@@ -183,8 +181,8 @@ namespace TextWindowEffect
             Rectangle selection = EnvironmentParameters.GetSelection(srcArgs.Surface.Bounds).GetBoundsInt();
 
             Bitmap textBitmap = new Bitmap(selection.Width, selection.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            Graphics g = Graphics.FromImage(textBitmap);
-            g.TextRenderingHint = TextRenderingHint.AntiAlias;
+            Graphics textGraphics = Graphics.FromImage(textBitmap);
+            textGraphics.TextRenderingHint = TextRenderingHint.AntiAlias;
 
             RectangleF textRect = new RectangleF((float)Amount9.First * selection.Width, (float)Amount9.Second * selection.Height, selection.Width, selection.Height); 
 
@@ -198,31 +196,25 @@ namespace TextWindowEffect
             using (SolidBrush fontBrush = new SolidBrush(Color.Black))
             using (Font font = new Font(Amount4, Amount3, fontStyles()))
             {
-                g.DrawString(textRepeated.ToString(), font, fontBrush, textRect);
+                textGraphics.DrawString(textRepeated.ToString(), font, fontBrush, textRect);
             }
 
             textSurface = Surface.CopyFromBitmap(textBitmap);
             textBitmap.Dispose();
+
+            base.OnSetRenderInfo(newToken, dstArgs, srcArgs);
         }
 
-        protected override unsafe void OnRender(Rectangle[] rois, int startIndex, int length)
+        protected override void OnRender(Rectangle[] renderRects, int startIndex, int length)
         {
             if (length == 0) return;
             for (int i = startIndex; i < startIndex + length; ++i)
             {
-                Render(DstArgs.Surface, SrcArgs.Surface, rois[i]);
+                Render(DstArgs.Surface, SrcArgs.Surface, renderRects[i]);
             }
         }
 
         #region User Entered Code
-        // Name: Text Window
-        // Submenu: Text Formations
-        // Author: toe_head2001
-        // Title: 
-        // Desc: 
-        // Keywords: Text|Transparent
-        // URL: http://www.getpaint.net/redirect/plugins.html
-        // Help:
         #region UICode
         string Amount1 = ""; // [0,255] Text
         int Amount2 = 100; // [1,1000] Text Repeat
@@ -245,7 +237,7 @@ namespace TextWindowEffect
                 }), null);
         }
 
-        private FontStyle fontStyles()
+        FontStyle fontStyles()
         {
             List<FontStyle> styleList = new List<FontStyle>();
             if (Amount5)
@@ -282,7 +274,7 @@ namespace TextWindowEffect
             return styles;
         }
 
-        private Surface textSurface;
+        Surface textSurface;
 
         void Render(Surface dst, Surface src, Rectangle rect)
         {
