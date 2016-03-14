@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Reflection;
 using System.Drawing.Text;
-using System.Windows.Forms;
 using System.Collections.Generic;
 using PaintDotNet;
 using PaintDotNet.Effects;
@@ -107,7 +106,14 @@ namespace TextWindowEffect
             props.Add(new StringProperty(PropertyNames.Amount1, "", 255));
             props.Add(new Int32Property(PropertyNames.Amount2, 100, 1, 1000));
             props.Add(new Int32Property(PropertyNames.Amount3, 12, 6, 250));
-            FontFamily[] Amount4FontFamilies = new InstalledFontCollection().Families;
+            FontFamily[] intstalledFontFamilies = new InstalledFontCollection().Families;
+            List<FontFamily> usableFonts = new List<FontFamily>();
+            foreach (FontFamily font in intstalledFontFamilies)
+            {
+                if (font.IsStyleAvailable(FontStyle.Regular))
+                    usableFonts.Add(font);
+            }
+            FontFamily[] Amount4FontFamilies = usableFonts.ToArray();
             props.Add(new StaticListChoiceProperty(PropertyNames.Amount4, Amount4FontFamilies, 0, false));
             props.Add(new BooleanProperty(PropertyNames.Amount5, false));
             props.Add(new BooleanProperty(PropertyNames.Amount6, false));
@@ -172,12 +178,6 @@ namespace TextWindowEffect
             Amount10 = ColorBgra.FromOpaqueInt32(newToken.GetProperty<Int32Property>(PropertyNames.Amount10).Value);
 
 
-            if (!Amount4.IsStyleAvailable(FontStyle.Regular))
-            {
-                InvalidFontMessage("You can not use the font '" + this.Amount4.Name + "'.\n\nPlease choose a different font.", "Font Error");
-                Amount4 = new FontFamily("Arial");
-            }
-
             Rectangle selection = EnvironmentParameters.GetSelection(srcArgs.Surface.Bounds).GetBoundsInt();
 
             Bitmap textBitmap = new Bitmap(selection.Width, selection.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
@@ -227,15 +227,6 @@ namespace TextWindowEffect
         Pair<double, double> Amount9 = Pair.Create(0.0, 0.0); // Offset
         ColorBgra Amount10 = ColorBgra.FromBgr(0, 0, 0); // Background Color
         #endregion
-
-        void InvalidFontMessage(string msg, string caption)
-        {
-            PaintDotNet.Threading.PdnSynchronizationContext.Instance.Send(
-                new System.Threading.SendOrPostCallback(delegate (object state)
-                {
-                    MessageBox.Show(msg, caption);
-                }), null);
-        }
 
         FontStyle fontStyles()
         {
