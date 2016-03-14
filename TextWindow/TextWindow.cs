@@ -179,12 +179,7 @@ namespace TextWindowEffect
 
 
             Rectangle selection = EnvironmentParameters.GetSelection(srcArgs.Surface.Bounds).GetBoundsInt();
-
-            Bitmap textBitmap = new Bitmap(selection.Width, selection.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            Graphics textGraphics = Graphics.FromImage(textBitmap);
-            textGraphics.TextRenderingHint = TextRenderingHint.AntiAlias;
-
-            RectangleF textRect = new RectangleF((float)Amount9.First * selection.Width, (float)Amount9.Second * selection.Height, selection.Width, selection.Height); 
+            RectangleF textRect = new RectangleF((float)Amount9.First * selection.Width + selection.Left, (float)Amount9.Second * selection.Height + selection.Top, selection.Width, selection.Height);
 
             string text = Amount1 + " ";
             System.Text.StringBuilder textRepeated = new System.Text.StringBuilder();
@@ -193,14 +188,24 @@ namespace TextWindowEffect
                 textRepeated.Append(text);
             }
 
-            using (SolidBrush fontBrush = new SolidBrush(Color.Black))
-            using (Font font = new Font(Amount4, Amount3, fontStyles()))
+            if (textSurface == null)
+                textSurface = new Surface(srcArgs.Surface.Size);
+            else
+                textSurface.Clear(Color.Transparent);
+
+            using (RenderArgs ra = new RenderArgs(textSurface))
             {
-                textGraphics.DrawString(textRepeated.ToString(), font, fontBrush, textRect);
+                Graphics textGraphics = ra.Graphics;
+                textGraphics.TextRenderingHint = TextRenderingHint.AntiAlias;
+
+                using (SolidBrush fontBrush = new SolidBrush(Color.Black))
+                using (Font font = new Font(Amount4, Amount3, fontStyles()))
+                {
+                    textGraphics.DrawString(textRepeated.ToString(), font, fontBrush, textRect);
+                }
+
             }
 
-            textSurface = Surface.CopyFromBitmap(textBitmap);
-            textBitmap.Dispose();
 
             base.OnSetRenderInfo(newToken, dstArgs, srcArgs);
         }
@@ -214,7 +219,6 @@ namespace TextWindowEffect
             }
         }
 
-        #region User Entered Code
         #region UICode
         string Amount1 = ""; // [0,255] Text
         int Amount2 = 100; // [1,1000] Text Repeat
@@ -269,8 +273,6 @@ namespace TextWindowEffect
 
         void Render(Surface dst, Surface src, Rectangle rect)
         {
-            Rectangle selection = EnvironmentParameters.GetSelection(src.Bounds).GetBoundsInt();
-
             ColorBgra CurrentPixel = Amount10;
             ColorBgra textPixel;
 
@@ -279,14 +281,13 @@ namespace TextWindowEffect
                 if (IsCancelRequested) return;
                 for (int x = rect.Left; x < rect.Right; x++)
                 {
-                    textPixel = textSurface.GetBilinearSample(x - selection.Left, y - selection.Top);
-
+                    textPixel = textSurface[x, y];
                     CurrentPixel.A = Int32Util.ClampToByte(255 - textPixel.A);
 
                     dst[x, y] = CurrentPixel;
                 }
             }
         }
-        #endregion
+
     }
 }
