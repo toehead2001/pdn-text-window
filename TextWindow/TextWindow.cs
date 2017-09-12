@@ -12,72 +12,19 @@ namespace TextWindowEffect
 {
     public class PluginSupportInfo : IPluginSupportInfo
     {
-        public string Author
-        {
-            get
-            {
-                return ((AssemblyCopyrightAttribute)base.GetType().Assembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false)[0]).Copyright;
-            }
-        }
-        public string Copyright
-        {
-            get
-            {
-                return ((AssemblyDescriptionAttribute)base.GetType().Assembly.GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false)[0]).Description;
-            }
-        }
-
-        public string DisplayName
-        {
-            get
-            {
-                return ((AssemblyProductAttribute)base.GetType().Assembly.GetCustomAttributes(typeof(AssemblyProductAttribute), false)[0]).Product;
-            }
-        }
-
-        public Version Version
-        {
-            get
-            {
-                return base.GetType().Assembly.GetName().Version;
-            }
-        }
-
-        public Uri WebsiteUri
-        {
-            get
-            {
-                return new Uri("http://www.getpaint.net/redirect/plugins.html");
-            }
-        }
+        public string Author => ((AssemblyCopyrightAttribute)base.GetType().Assembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false)[0]).Copyright;
+        public string Copyright => ((AssemblyDescriptionAttribute)base.GetType().Assembly.GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false)[0]).Description;
+        public string DisplayName => ((AssemblyProductAttribute)base.GetType().Assembly.GetCustomAttributes(typeof(AssemblyProductAttribute), false)[0]).Product;
+        public Version Version => base.GetType().Assembly.GetName().Version;
+        public Uri WebsiteUri => new Uri("http://www.getpaint.net/redirect/plugins.html");
     }
 
     [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = "Text Window")]
     public class TextWindowEffectPlugin : PropertyBasedEffect
     {
-        public static string StaticName
-        {
-            get
-            {
-                return "Text Window";
-            }
-        }
-
-        public static Image StaticIcon
-        {
-            get
-            {
-                return new Bitmap(typeof(TextWindowEffectPlugin), "TextWindow.png");
-            }
-        }
-
-        public static string SubmenuName
-        {
-            get
-            {
-                return "Text Formations";  // Programmer's chosen default
-            }
-        }
+        private const string StaticName = "Text Window";
+        private static readonly Image StaticIcon = new Bitmap(typeof(TextWindowEffectPlugin), "TextWindow.png");
+        private const string SubmenuName = "Text Formations";
 
         public TextWindowEffectPlugin()
             : base(StaticName, StaticIcon, SubmenuName, EffectFlags.Configurable)
