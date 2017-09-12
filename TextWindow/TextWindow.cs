@@ -221,16 +221,13 @@ namespace TextWindowEffect
         void Render(Surface dst, Surface src, Rectangle rect)
         {
             ColorBgra CurrentPixel = Amount10;
-            ColorBgra textPixel;
 
             for (int y = rect.Top; y < rect.Bottom; y++)
             {
                 if (IsCancelRequested) return;
                 for (int x = rect.Left; x < rect.Right; x++)
                 {
-                    textPixel = textSurface[x, y];
-                    CurrentPixel.A = Int32Util.ClampToByte(255 - textPixel.A);
-
+                    CurrentPixel.A = Int32Util.ClampToByte(byte.MaxValue - textSurface[x, y].A);
                     dst[x, y] = CurrentPixel;
                 }
             }
