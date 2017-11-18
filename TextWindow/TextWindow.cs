@@ -13,21 +13,22 @@ namespace TextWindowEffect
     public class PluginSupportInfo : IPluginSupportInfo
     {
         public string Author => ((AssemblyCopyrightAttribute)base.GetType().Assembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false)[0]).Copyright;
-        public string Copyright => ((AssemblyDescriptionAttribute)base.GetType().Assembly.GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false)[0]).Description;
-        public string DisplayName => ((AssemblyProductAttribute)base.GetType().Assembly.GetCustomAttributes(typeof(AssemblyProductAttribute), false)[0]).Product;
+        public string Copyright => L10nStrings.EffectDescription;
+        public string DisplayName => L10nStrings.EffectName;
         public Version Version => base.GetType().Assembly.GetName().Version;
         public Uri WebsiteUri => new Uri("http://www.getpaint.net/redirect/plugins.html");
+
+        public string plugin_browser_Keywords => L10nStrings.EffectKeywords;
+        public string plugin_browser_Description => L10nStrings.EffectDescription;
     }
 
     [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = "Text Window")]
     public class TextWindowEffectPlugin : PropertyBasedEffect
     {
-        private const string StaticName = "Text Window";
         private static readonly Image StaticIcon = new Bitmap(typeof(TextWindowEffectPlugin), "TextWindow.png");
-        private const string SubmenuName = "Text Formations";
 
         public TextWindowEffectPlugin()
-            : base(StaticName, StaticIcon, SubmenuName, EffectFlags.Configurable)
+            : base(L10nStrings.EffectName, StaticIcon, L10nStrings.EffectMenu, EffectFlags.Configurable)
         {
         }
 
@@ -76,10 +77,10 @@ namespace TextWindowEffect
         {
             ControlInfo configUI = CreateDefaultConfigUI(props);
 
-            configUI.SetPropertyControlValue(PropertyNames.Amount1, ControlInfoPropertyNames.DisplayName, "Text");
-            configUI.SetPropertyControlValue(PropertyNames.Amount2, ControlInfoPropertyNames.DisplayName, "Text Repeat");
-            configUI.SetPropertyControlValue(PropertyNames.Amount3, ControlInfoPropertyNames.DisplayName, "Font Size");
-            configUI.SetPropertyControlValue(PropertyNames.Amount4, ControlInfoPropertyNames.DisplayName, "Font");
+            configUI.SetPropertyControlValue(PropertyNames.Amount1, ControlInfoPropertyNames.DisplayName, L10nStrings.Text);
+            configUI.SetPropertyControlValue(PropertyNames.Amount2, ControlInfoPropertyNames.DisplayName, L10nStrings.TextRepeat);
+            configUI.SetPropertyControlValue(PropertyNames.Amount3, ControlInfoPropertyNames.DisplayName, L10nStrings.FontSize);
+            configUI.SetPropertyControlValue(PropertyNames.Amount4, ControlInfoPropertyNames.DisplayName, L10nStrings.Font);
             PropertyControlInfo Amount4FontFamilyControl = configUI.FindControlForPropertyName(PropertyNames.Amount4);
             FontFamily[] Amount4FontFamilies = new InstalledFontCollection().Families;
             foreach (FontFamily ff in Amount4FontFamilies)
@@ -87,14 +88,14 @@ namespace TextWindowEffect
                 Amount4FontFamilyControl.SetValueDisplayName(ff, ff.Name);
             }
             configUI.SetPropertyControlValue(PropertyNames.Amount5, ControlInfoPropertyNames.DisplayName, string.Empty);
-            configUI.SetPropertyControlValue(PropertyNames.Amount5, ControlInfoPropertyNames.Description, "Bold");
+            configUI.SetPropertyControlValue(PropertyNames.Amount5, ControlInfoPropertyNames.Description, L10nStrings.Bold);
             configUI.SetPropertyControlValue(PropertyNames.Amount6, ControlInfoPropertyNames.DisplayName, string.Empty);
-            configUI.SetPropertyControlValue(PropertyNames.Amount6, ControlInfoPropertyNames.Description, "Italic");
+            configUI.SetPropertyControlValue(PropertyNames.Amount6, ControlInfoPropertyNames.Description, L10nStrings.Italic);
             configUI.SetPropertyControlValue(PropertyNames.Amount7, ControlInfoPropertyNames.DisplayName, string.Empty);
-            configUI.SetPropertyControlValue(PropertyNames.Amount7, ControlInfoPropertyNames.Description, "Underline");
+            configUI.SetPropertyControlValue(PropertyNames.Amount7, ControlInfoPropertyNames.Description, L10nStrings.Underline);
             configUI.SetPropertyControlValue(PropertyNames.Amount8, ControlInfoPropertyNames.DisplayName, string.Empty);
-            configUI.SetPropertyControlValue(PropertyNames.Amount8, ControlInfoPropertyNames.Description, "Strikeout");
-            configUI.SetPropertyControlValue(PropertyNames.Amount9, ControlInfoPropertyNames.DisplayName, "Offset");
+            configUI.SetPropertyControlValue(PropertyNames.Amount8, ControlInfoPropertyNames.Description, L10nStrings.Strikeout);
+            configUI.SetPropertyControlValue(PropertyNames.Amount9, ControlInfoPropertyNames.DisplayName, L10nStrings.Offset);
             configUI.SetPropertyControlValue(PropertyNames.Amount9, ControlInfoPropertyNames.SliderSmallChangeX, 0.05);
             configUI.SetPropertyControlValue(PropertyNames.Amount9, ControlInfoPropertyNames.SliderLargeChangeX, 0.25);
             configUI.SetPropertyControlValue(PropertyNames.Amount9, ControlInfoPropertyNames.UpDownIncrementX, 0.01);
@@ -104,7 +105,7 @@ namespace TextWindowEffect
             Rectangle selection9 = EnvironmentParameters.GetSelection(EnvironmentParameters.SourceSurface.Bounds).GetBoundsInt();
             ImageResource imageResource9 = ImageResource.FromImage(EnvironmentParameters.SourceSurface.CreateAliasedBitmap(selection9));
             configUI.SetPropertyControlValue(PropertyNames.Amount9, ControlInfoPropertyNames.StaticImageUnderlay, imageResource9);
-            configUI.SetPropertyControlValue(PropertyNames.Amount10, ControlInfoPropertyNames.DisplayName, "Background Color");
+            configUI.SetPropertyControlValue(PropertyNames.Amount10, ControlInfoPropertyNames.DisplayName, L10nStrings.Offset);
             configUI.SetPropertyControlType(PropertyNames.Amount10, PropertyControlType.ColorWheel);
 
             return configUI;
