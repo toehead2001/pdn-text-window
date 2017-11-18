@@ -22,7 +22,7 @@ namespace TextWindowEffect
         public string plugin_browser_Description => L10nStrings.EffectDescription;
     }
 
-    [PluginSupportInfo(typeof(PluginSupportInfo), DisplayName = "Text Window")]
+    [PluginSupportInfo(typeof(PluginSupportInfo))]
     public class TextWindowEffectPlugin : PropertyBasedEffect
     {
         private static readonly Image StaticIcon = new Bitmap(typeof(TextWindowEffectPlugin), "TextWindow.png");
