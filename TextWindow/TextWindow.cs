@@ -95,7 +95,7 @@ namespace TextWindowEffect
             Rectangle selection9 = EnvironmentParameters.GetSelection(EnvironmentParameters.SourceSurface.Bounds).GetBoundsInt();
             ImageResource imageResource9 = ImageResource.FromImage(EnvironmentParameters.SourceSurface.CreateAliasedBitmap(selection9));
             configUI.SetPropertyControlValue(PropertyNames.Amount9, ControlInfoPropertyNames.StaticImageUnderlay, imageResource9);
-            configUI.SetPropertyControlValue(PropertyNames.Amount10, ControlInfoPropertyNames.DisplayName, L10nStrings.Offset);
+            configUI.SetPropertyControlValue(PropertyNames.Amount10, ControlInfoPropertyNames.DisplayName, L10nStrings.BackColor);
             configUI.SetPropertyControlType(PropertyNames.Amount10, PropertyControlType.ColorWheel);
 
             return configUI;
