@@ -12,7 +12,7 @@ namespace TextWindowEffect
 {
     public class PluginSupportInfo : IPluginSupportInfo
     {
-        public string Author => ((AssemblyCopyrightAttribute)base.GetType().Assembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false)[0]).Copyright;
+        public string Author => base.GetType().Assembly.GetCustomAttribute<AssemblyCopyrightAttribute>().Copyright;
         public string Copyright => L10nStrings.EffectDescription;
         public string DisplayName => L10nStrings.EffectName;
         public Version Version => base.GetType().Assembly.GetName().Version;
