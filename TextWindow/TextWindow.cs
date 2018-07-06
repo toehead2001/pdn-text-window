@@ -53,7 +53,7 @@ namespace TextWindowEffect
             props.Add(new StringProperty(PropertyNames.Amount1, "", 255));
             props.Add(new Int32Property(PropertyNames.Amount2, 100, 1, 1000));
             props.Add(new Int32Property(PropertyNames.Amount3, 12, 6, 250));
-            props.Add(new StaticListChoiceProperty(PropertyNames.Amount4, FontUtil.UsableFontFamilies, 0, false));
+            props.Add(new StaticListChoiceProperty(PropertyNames.Amount4, FontUtil.UsableFontFamilies, FontUtil.FindFontIndex("Arial"), false));
             props.Add(new BooleanProperty(PropertyNames.Amount5, false));
             props.Add(new BooleanProperty(PropertyNames.Amount6, false));
             props.Add(new BooleanProperty(PropertyNames.Amount7, false));
@@ -198,6 +198,19 @@ namespace TextWindowEffect
     internal static class FontUtil
     {
         internal static readonly FontFamily[] UsableFontFamilies;
+
+        internal static int FindFontIndex(string familyName)
+        {
+            for (int i = 0; i < UsableFontFamilies.Length; i++)
+            {
+                if (UsableFontFamilies[i].Name == familyName)
+                {
+                    return i;
+                }
+            }
+
+            return 0;
+        }
 
         static FontUtil()
         {
