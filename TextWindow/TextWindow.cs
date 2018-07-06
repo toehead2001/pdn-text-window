@@ -219,7 +219,7 @@ namespace TextWindowEffect
             {
                 foreach (FontFamily font in intstalledFonts.Families)
                 {
-                    if (font.IsStyleAvailable(FontStyle.Regular))
+                    if (font.IsStyleAvailable(FontStyle.Regular & FontStyle.Bold & FontStyle.Italic & FontStyle.Underline & FontStyle.Strikeout))
                         usableFonts.Add(font);
                 }
             }
