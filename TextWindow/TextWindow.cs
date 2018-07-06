@@ -131,10 +131,9 @@ namespace TextWindowEffect
             else
                 textSurface.Clear(Color.Transparent);
 
-            using (RenderArgs ra = new RenderArgs(textSurface))
+            using (Graphics g = new RenderArgs(textSurface).Graphics)
             {
-                Graphics textGraphics = ra.Graphics;
-                textGraphics.TextRenderingHint = TextRenderingHint.AntiAlias;
+                g.TextRenderingHint = TextRenderingHint.AntiAlias;
 
                 FontStyle fontStyle = FontStyle.Regular;
                 if (Amount5) fontStyle |= FontStyle.Bold;
@@ -145,7 +144,7 @@ namespace TextWindowEffect
                 using (SolidBrush fontBrush = new SolidBrush(Color.Black))
                 using (Font font = new Font(Amount4, Amount3, fontStyle))
                 {
-                    textGraphics.DrawString(textRepeated.ToString(), font, fontBrush, textRect);
+                    g.DrawString(textRepeated.ToString(), font, fontBrush, textRect);
                 }
 
             }
