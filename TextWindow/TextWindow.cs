@@ -136,8 +136,14 @@ namespace TextWindowEffect
                 Graphics textGraphics = ra.Graphics;
                 textGraphics.TextRenderingHint = TextRenderingHint.AntiAlias;
 
+                FontStyle fontStyle = FontStyle.Regular;
+                if (Amount5) fontStyle |= FontStyle.Bold;
+                if (Amount6) fontStyle |= FontStyle.Italic;
+                if (Amount7) fontStyle |= FontStyle.Underline;
+                if (Amount8) fontStyle |= FontStyle.Strikeout;
+
                 using (SolidBrush fontBrush = new SolidBrush(Color.Black))
-                using (Font font = new Font(Amount4, Amount3, fontStyles()))
+                using (Font font = new Font(Amount4, Amount3, fontStyle))
                 {
                     textGraphics.DrawString(textRepeated.ToString(), font, fontBrush, textRect);
                 }
@@ -169,43 +175,6 @@ namespace TextWindowEffect
         Pair<double, double> Amount9 = Pair.Create(0.0, 0.0); // Offset
         ColorBgra Amount10 = ColorBgra.FromBgr(0, 0, 0); // Background Color
         #endregion
-
-        FontStyle fontStyles()
-        {
-            List<FontStyle> styleList = new List<FontStyle>();
-            if (Amount5)
-                styleList.Add(FontStyle.Bold);
-            if (Amount6)
-                styleList.Add(FontStyle.Italic);
-            if (Amount7)
-                styleList.Add(FontStyle.Underline);
-            if (Amount8)
-                styleList.Add(FontStyle.Strikeout);
-
-            FontStyle styles;
-            switch (styleList.Count)
-            {
-                case 0:
-                    styles = FontStyle.Regular;
-                    break;
-                case 1:
-                    styles = styleList[0];
-                    break;
-                case 2:
-                    styles = styleList[0] | styleList[1];
-                    break;
-                case 3:
-                    styles = styleList[0] | styleList[1] | styleList[2];
-                    break;
-                case 4:
-                    styles = styleList[0] | styleList[1] | styleList[2] | styleList[3];
-                    break;
-                default:
-                    styles = FontStyle.Regular;
-                    break;
-            }
-            return styles;
-        }
 
         Surface textSurface;
 
