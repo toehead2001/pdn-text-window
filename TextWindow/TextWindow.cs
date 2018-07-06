@@ -46,7 +46,6 @@ namespace TextWindowEffect
             Amount10
         }
 
-
         protected override PropertyCollection OnCreatePropertyCollection()
         {
             List<Property> props = new List<Property>();
@@ -54,15 +53,7 @@ namespace TextWindowEffect
             props.Add(new StringProperty(PropertyNames.Amount1, "", 255));
             props.Add(new Int32Property(PropertyNames.Amount2, 100, 1, 1000));
             props.Add(new Int32Property(PropertyNames.Amount3, 12, 6, 250));
-            FontFamily[] intstalledFontFamilies = new InstalledFontCollection().Families;
-            List<FontFamily> usableFonts = new List<FontFamily>();
-            foreach (FontFamily font in intstalledFontFamilies)
-            {
-                if (font.IsStyleAvailable(FontStyle.Regular))
-                    usableFonts.Add(font);
-            }
-            FontFamily[] Amount4FontFamilies = usableFonts.ToArray();
-            props.Add(new StaticListChoiceProperty(PropertyNames.Amount4, Amount4FontFamilies, 0, false));
+            props.Add(new StaticListChoiceProperty(PropertyNames.Amount4, FontUtil.UsableFontFamilies, 0, false));
             props.Add(new BooleanProperty(PropertyNames.Amount5, false));
             props.Add(new BooleanProperty(PropertyNames.Amount6, false));
             props.Add(new BooleanProperty(PropertyNames.Amount7, false));
@@ -82,8 +73,7 @@ namespace TextWindowEffect
             configUI.SetPropertyControlValue(PropertyNames.Amount3, ControlInfoPropertyNames.DisplayName, L10nStrings.FontSize);
             configUI.SetPropertyControlValue(PropertyNames.Amount4, ControlInfoPropertyNames.DisplayName, L10nStrings.Font);
             PropertyControlInfo Amount4FontFamilyControl = configUI.FindControlForPropertyName(PropertyNames.Amount4);
-            FontFamily[] Amount4FontFamilies = new InstalledFontCollection().Families;
-            foreach (FontFamily ff in Amount4FontFamilies)
+            foreach (FontFamily ff in FontUtil.UsableFontFamilies)
             {
                 Amount4FontFamilyControl.SetValueDisplayName(ff, ff.Name);
             }
@@ -234,5 +224,24 @@ namespace TextWindowEffect
             }
         }
 
+    }
+
+    internal static class FontUtil
+    {
+        internal static readonly FontFamily[] UsableFontFamilies;
+
+        static FontUtil()
+        {
+            List<FontFamily> usableFonts = new List<FontFamily>();
+            using (InstalledFontCollection intstalledFonts = new InstalledFontCollection())
+            {
+                foreach (FontFamily font in intstalledFonts.Families)
+                {
+                    if (font.IsStyleAvailable(FontStyle.Regular))
+                        usableFonts.Add(font);
+                }
+            }
+            UsableFontFamilies = usableFonts.ToArray();
+        }
     }
 }
