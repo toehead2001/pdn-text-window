@@ -16,7 +16,7 @@ namespace TextWindowEffect
         public string Copyright => L10nStrings.EffectDescription;
         public string DisplayName => L10nStrings.EffectName;
         public Version Version => base.GetType().Assembly.GetName().Version;
-        public Uri WebsiteUri => new Uri("http://www.getpaint.net/redirect/plugins.html");
+        public Uri WebsiteUri => new Uri("https://forums.getpaint.net/index.php?showtopic=32208");
 
         public string plugin_browser_Keywords => L10nStrings.EffectKeywords;
         public string plugin_browser_Description => L10nStrings.EffectDescription;
@@ -32,7 +32,7 @@ namespace TextWindowEffect
         {
         }
 
-        public enum PropertyNames
+        private enum PropertyNames
         {
             Amount1,
             Amount2,
@@ -48,18 +48,19 @@ namespace TextWindowEffect
 
         protected override PropertyCollection OnCreatePropertyCollection()
         {
-            List<Property> props = new List<Property>();
-
-            props.Add(new StringProperty(PropertyNames.Amount1, "", 255));
-            props.Add(new Int32Property(PropertyNames.Amount2, 100, 1, 1000));
-            props.Add(new Int32Property(PropertyNames.Amount3, 12, 6, 250));
-            props.Add(new StaticListChoiceProperty(PropertyNames.Amount4, FontUtil.UsableFontFamilies, FontUtil.FindFontIndex("Arial"), false));
-            props.Add(new BooleanProperty(PropertyNames.Amount5, false));
-            props.Add(new BooleanProperty(PropertyNames.Amount6, false));
-            props.Add(new BooleanProperty(PropertyNames.Amount7, false));
-            props.Add(new BooleanProperty(PropertyNames.Amount8, false));
-            props.Add(new DoubleVectorProperty(PropertyNames.Amount9, Pair.Create(0.0, 0.0), Pair.Create(-1.0, -1.0), Pair.Create(+1.0, +1.0)));
-            props.Add(new Int32Property(PropertyNames.Amount10, ColorBgra.ToOpaqueInt32(ColorBgra.FromBgra(EnvironmentParameters.PrimaryColor.B, EnvironmentParameters.PrimaryColor.G, EnvironmentParameters.PrimaryColor.R, 255)), 0, 0xffffff));
+            List<Property> props = new List<Property>
+            {
+                new StringProperty(PropertyNames.Amount1, "", 255),
+                new Int32Property(PropertyNames.Amount2, 100, 1, 1000),
+                new Int32Property(PropertyNames.Amount3, 12, 6, 250),
+                new StaticListChoiceProperty(PropertyNames.Amount4, FontUtil.UsableFontFamilies, FontUtil.FindFontIndex("Arial"), false),
+                new BooleanProperty(PropertyNames.Amount5, false),
+                new BooleanProperty(PropertyNames.Amount6, false),
+                new BooleanProperty(PropertyNames.Amount7, false),
+                new BooleanProperty(PropertyNames.Amount8, false),
+                new DoubleVectorProperty(PropertyNames.Amount9, Pair.Create(0.0, 0.0), Pair.Create(-1.0, -1.0), Pair.Create(+1.0, +1.0)),
+                new Int32Property(PropertyNames.Amount10, ColorBgra.ToOpaqueInt32(ColorBgra.FromBgra(EnvironmentParameters.PrimaryColor.B, EnvironmentParameters.PrimaryColor.G, EnvironmentParameters.PrimaryColor.R, 255)), 0, 0xffffff)
+            };
 
             return new PropertyCollection(props);
         }
@@ -115,7 +116,6 @@ namespace TextWindowEffect
             Amount9 = newToken.GetProperty<DoubleVectorProperty>(PropertyNames.Amount9).Value;
             Amount10 = ColorBgra.FromOpaqueInt32(newToken.GetProperty<Int32Property>(PropertyNames.Amount10).Value);
 
-
             Rectangle selection = EnvironmentParameters.GetSelection(srcArgs.Surface.Bounds).GetBoundsInt();
             RectangleF textRect = new RectangleF((float)Amount9.First * selection.Width + selection.Left, (float)Amount9.Second * selection.Height + selection.Top, selection.Width, selection.Height);
 
@@ -146,9 +146,7 @@ namespace TextWindowEffect
                 {
                     g.DrawString(textRepeated.ToString(), font, fontBrush, textRect);
                 }
-
             }
-
 
             base.OnSetRenderInfo(newToken, dstArgs, srcArgs);
         }
@@ -162,22 +160,20 @@ namespace TextWindowEffect
             }
         }
 
-        #region UICode
-        string Amount1 = ""; // [0,255] Text
-        int Amount2 = 100; // [1,1000] Text Repeat
-        int Amount3 = 12; // [6,250] Font Size
-        FontFamily Amount4 = new FontFamily("Arial"); // Font
-        bool Amount5 = false; // [0,1] Bold
-        bool Amount6 = false; // [0,1] Italic
-        bool Amount7 = false; // [0,1] Underline
-        bool Amount8 = false; // [0,1] Strikeout
-        Pair<double, double> Amount9 = Pair.Create(0.0, 0.0); // Offset
-        ColorBgra Amount10 = ColorBgra.FromBgr(0, 0, 0); // Background Color
-        #endregion
+        private string Amount1 = ""; // [0,255] Text
+        private int Amount2 = 100; // [1,1000] Text Repeat
+        private int Amount3 = 12; // [6,250] Font Size
+        private FontFamily Amount4 = new FontFamily("Arial"); // Font
+        private bool Amount5 = false; // [0,1] Bold
+        private bool Amount6 = false; // [0,1] Italic
+        private bool Amount7 = false; // [0,1] Underline
+        private bool Amount8 = false; // [0,1] Strikeout
+        private Pair<double, double> Amount9 = Pair.Create(0.0, 0.0); // Offset
+        private ColorBgra Amount10 = ColorBgra.FromBgr(0, 0, 0); // Background Color
 
-        Surface textSurface;
+        private Surface textSurface;
 
-        void Render(Surface dst, Surface src, Rectangle rect)
+        private void Render(Surface dst, Surface src, Rectangle rect)
         {
             ColorBgra CurrentPixel = Amount10;
 
@@ -191,7 +187,6 @@ namespace TextWindowEffect
                 }
             }
         }
-
     }
 
     internal static class FontUtil
@@ -202,7 +197,7 @@ namespace TextWindowEffect
         {
             for (int i = 0; i < UsableFontFamilies.Length; i++)
             {
-                if (UsableFontFamilies[i].Name == familyName)
+                if (UsableFontFamilies[i].Name.Equals(familyName, StringComparison.OrdinalIgnoreCase))
                 {
                     return i;
                 }
