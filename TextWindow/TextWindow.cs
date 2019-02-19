@@ -7,6 +7,7 @@ using PaintDotNet;
 using PaintDotNet.Effects;
 using PaintDotNet.IndirectUI;
 using PaintDotNet.PropertySystem;
+using System.Windows.Forms;
 
 namespace TextWindowEffect
 {
@@ -50,7 +51,7 @@ namespace TextWindowEffect
         {
             List<Property> props = new List<Property>
             {
-                new StringProperty(PropertyNames.Amount1, "", 255),
+                new StringProperty(PropertyNames.Amount1, "", 10000),
                 new Int32Property(PropertyNames.Amount2, 100, 1, 1000),
                 new Int32Property(PropertyNames.Amount3, 12, 6, 250),
                 new StaticListChoiceProperty(PropertyNames.Amount4, FontUtil.UsableFontFamilies, FontUtil.FindFontIndex("Arial"), false),
@@ -117,7 +118,7 @@ namespace TextWindowEffect
             Amount10 = ColorBgra.FromOpaqueInt32(newToken.GetProperty<Int32Property>(PropertyNames.Amount10).Value);
 
             Rectangle selection = EnvironmentParameters.GetSelection(srcArgs.Surface.Bounds).GetBoundsInt();
-            RectangleF textRect = new RectangleF((float)Amount9.First * selection.Width + selection.Left, (float)Amount9.Second * selection.Height + selection.Top, selection.Width, selection.Height);
+            Rectangle textRect = Rectangle.Round( new RectangleF((float)Amount9.First * selection.Width + selection.Left, (float)Amount9.Second * selection.Height + selection.Top, selection.Width, selection.Height));
 
             string text = Amount1 + " ";
             System.Text.StringBuilder textRepeated = new System.Text.StringBuilder();
@@ -141,10 +142,10 @@ namespace TextWindowEffect
                 if (Amount7) fontStyle |= FontStyle.Underline;
                 if (Amount8) fontStyle |= FontStyle.Strikeout;
 
-                using (SolidBrush fontBrush = new SolidBrush(Color.Black))
+                TextFormatFlags flags = TextFormatFlags.Top | TextFormatFlags.WordBreak;
                 using (Font font = new Font(Amount4, Amount3, fontStyle))
                 {
-                    g.DrawString(textRepeated.ToString(), font, fontBrush, textRect);
+                    TextRenderer.DrawText(g, textRepeated.ToString(), font, textRect, Color.Black, Color.Transparent, flags);
                 }
             }
 
