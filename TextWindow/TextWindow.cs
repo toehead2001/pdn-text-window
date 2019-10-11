@@ -34,32 +34,32 @@ namespace TextWindowEffect
 
         private enum PropertyNames
         {
-            Amount1,
-            Amount2,
-            Amount3,
-            Amount4,
-            Amount5,
-            Amount6,
-            Amount7,
-            Amount8,
-            Amount9,
-            Amount10
+            Text,
+            TextRepeat,
+            FontSize,
+            Font,
+            Bold,
+            Italic,
+            Underline,
+            Strikeout,
+            Offset,
+            BackColor
         }
 
         protected override PropertyCollection OnCreatePropertyCollection()
         {
             List<Property> props = new List<Property>
             {
-                new StringProperty(PropertyNames.Amount1, "", 255),
-                new Int32Property(PropertyNames.Amount2, 100, 1, 1000),
-                new Int32Property(PropertyNames.Amount3, 12, 6, 250),
-                new StaticListChoiceProperty(PropertyNames.Amount4, FontUtil.UsableFontFamilies, FontUtil.FindFontIndex("Arial"), false),
-                new BooleanProperty(PropertyNames.Amount5, false),
-                new BooleanProperty(PropertyNames.Amount6, false),
-                new BooleanProperty(PropertyNames.Amount7, false),
-                new BooleanProperty(PropertyNames.Amount8, false),
-                new DoubleVectorProperty(PropertyNames.Amount9, Pair.Create(0.0, 0.0), Pair.Create(-1.0, -1.0), Pair.Create(+1.0, +1.0)),
-                new Int32Property(PropertyNames.Amount10, ColorBgra.ToOpaqueInt32(ColorBgra.FromBgra(EnvironmentParameters.PrimaryColor.B, EnvironmentParameters.PrimaryColor.G, EnvironmentParameters.PrimaryColor.R, 255)), 0, 0xffffff)
+                new StringProperty(PropertyNames.Text, "", 255),
+                new Int32Property(PropertyNames.TextRepeat, 100, 1, 1000),
+                new Int32Property(PropertyNames.FontSize, 12, 6, 250),
+                new StaticListChoiceProperty(PropertyNames.Font, FontUtil.UsableFontFamilies, FontUtil.FindFontIndex("Arial"), false),
+                new BooleanProperty(PropertyNames.Bold, false),
+                new BooleanProperty(PropertyNames.Italic, false),
+                new BooleanProperty(PropertyNames.Underline, false),
+                new BooleanProperty(PropertyNames.Strikeout, false),
+                new DoubleVectorProperty(PropertyNames.Offset, Pair.Create(0.0, 0.0), Pair.Create(-1.0, -1.0), Pair.Create(+1.0, +1.0)),
+                new Int32Property(PropertyNames.BackColor, ColorBgra.ToOpaqueInt32(ColorBgra.FromBgra(EnvironmentParameters.PrimaryColor.B, EnvironmentParameters.PrimaryColor.G, EnvironmentParameters.PrimaryColor.R, 255)), 0, 0xffffff)
             };
 
             return new PropertyCollection(props);
@@ -69,52 +69,52 @@ namespace TextWindowEffect
         {
             ControlInfo configUI = CreateDefaultConfigUI(props);
 
-            configUI.SetPropertyControlValue(PropertyNames.Amount1, ControlInfoPropertyNames.DisplayName, L10nStrings.Text);
-            configUI.SetPropertyControlValue(PropertyNames.Amount2, ControlInfoPropertyNames.DisplayName, L10nStrings.TextRepeat);
-            configUI.SetPropertyControlValue(PropertyNames.Amount3, ControlInfoPropertyNames.DisplayName, L10nStrings.FontSize);
-            configUI.SetPropertyControlValue(PropertyNames.Amount4, ControlInfoPropertyNames.DisplayName, L10nStrings.Font);
-            PropertyControlInfo Amount4FontFamilyControl = configUI.FindControlForPropertyName(PropertyNames.Amount4);
+            configUI.SetPropertyControlValue(PropertyNames.Text, ControlInfoPropertyNames.DisplayName, L10nStrings.Text);
+            configUI.SetPropertyControlValue(PropertyNames.TextRepeat, ControlInfoPropertyNames.DisplayName, L10nStrings.TextRepeat);
+            configUI.SetPropertyControlValue(PropertyNames.FontSize, ControlInfoPropertyNames.DisplayName, L10nStrings.FontSize);
+            configUI.SetPropertyControlValue(PropertyNames.Font, ControlInfoPropertyNames.DisplayName, L10nStrings.Font);
+            PropertyControlInfo Amount4FontFamilyControl = configUI.FindControlForPropertyName(PropertyNames.Font);
             foreach (FontFamily ff in FontUtil.UsableFontFamilies)
             {
                 Amount4FontFamilyControl.SetValueDisplayName(ff, ff.Name);
             }
-            configUI.SetPropertyControlValue(PropertyNames.Amount5, ControlInfoPropertyNames.DisplayName, string.Empty);
-            configUI.SetPropertyControlValue(PropertyNames.Amount5, ControlInfoPropertyNames.Description, L10nStrings.Bold);
-            configUI.SetPropertyControlValue(PropertyNames.Amount6, ControlInfoPropertyNames.DisplayName, string.Empty);
-            configUI.SetPropertyControlValue(PropertyNames.Amount6, ControlInfoPropertyNames.Description, L10nStrings.Italic);
-            configUI.SetPropertyControlValue(PropertyNames.Amount7, ControlInfoPropertyNames.DisplayName, string.Empty);
-            configUI.SetPropertyControlValue(PropertyNames.Amount7, ControlInfoPropertyNames.Description, L10nStrings.Underline);
-            configUI.SetPropertyControlValue(PropertyNames.Amount8, ControlInfoPropertyNames.DisplayName, string.Empty);
-            configUI.SetPropertyControlValue(PropertyNames.Amount8, ControlInfoPropertyNames.Description, L10nStrings.Strikeout);
-            configUI.SetPropertyControlValue(PropertyNames.Amount9, ControlInfoPropertyNames.DisplayName, L10nStrings.Offset);
-            configUI.SetPropertyControlValue(PropertyNames.Amount9, ControlInfoPropertyNames.SliderSmallChangeX, 0.05);
-            configUI.SetPropertyControlValue(PropertyNames.Amount9, ControlInfoPropertyNames.SliderLargeChangeX, 0.25);
-            configUI.SetPropertyControlValue(PropertyNames.Amount9, ControlInfoPropertyNames.UpDownIncrementX, 0.01);
-            configUI.SetPropertyControlValue(PropertyNames.Amount9, ControlInfoPropertyNames.SliderSmallChangeY, 0.05);
-            configUI.SetPropertyControlValue(PropertyNames.Amount9, ControlInfoPropertyNames.SliderLargeChangeY, 0.25);
-            configUI.SetPropertyControlValue(PropertyNames.Amount9, ControlInfoPropertyNames.UpDownIncrementY, 0.01);
+            configUI.SetPropertyControlValue(PropertyNames.Bold, ControlInfoPropertyNames.DisplayName, string.Empty);
+            configUI.SetPropertyControlValue(PropertyNames.Bold, ControlInfoPropertyNames.Description, L10nStrings.Bold);
+            configUI.SetPropertyControlValue(PropertyNames.Italic, ControlInfoPropertyNames.DisplayName, string.Empty);
+            configUI.SetPropertyControlValue(PropertyNames.Italic, ControlInfoPropertyNames.Description, L10nStrings.Italic);
+            configUI.SetPropertyControlValue(PropertyNames.Underline, ControlInfoPropertyNames.DisplayName, string.Empty);
+            configUI.SetPropertyControlValue(PropertyNames.Underline, ControlInfoPropertyNames.Description, L10nStrings.Underline);
+            configUI.SetPropertyControlValue(PropertyNames.Strikeout, ControlInfoPropertyNames.DisplayName, string.Empty);
+            configUI.SetPropertyControlValue(PropertyNames.Strikeout, ControlInfoPropertyNames.Description, L10nStrings.Strikeout);
+            configUI.SetPropertyControlValue(PropertyNames.Offset, ControlInfoPropertyNames.DisplayName, L10nStrings.Offset);
+            configUI.SetPropertyControlValue(PropertyNames.Offset, ControlInfoPropertyNames.SliderSmallChangeX, 0.05);
+            configUI.SetPropertyControlValue(PropertyNames.Offset, ControlInfoPropertyNames.SliderLargeChangeX, 0.25);
+            configUI.SetPropertyControlValue(PropertyNames.Offset, ControlInfoPropertyNames.UpDownIncrementX, 0.01);
+            configUI.SetPropertyControlValue(PropertyNames.Offset, ControlInfoPropertyNames.SliderSmallChangeY, 0.05);
+            configUI.SetPropertyControlValue(PropertyNames.Offset, ControlInfoPropertyNames.SliderLargeChangeY, 0.25);
+            configUI.SetPropertyControlValue(PropertyNames.Offset, ControlInfoPropertyNames.UpDownIncrementY, 0.01);
             Rectangle selection9 = EnvironmentParameters.GetSelection(EnvironmentParameters.SourceSurface.Bounds).GetBoundsInt();
             ImageResource imageResource9 = ImageResource.FromImage(EnvironmentParameters.SourceSurface.CreateAliasedBitmap(selection9));
-            configUI.SetPropertyControlValue(PropertyNames.Amount9, ControlInfoPropertyNames.StaticImageUnderlay, imageResource9);
-            configUI.SetPropertyControlValue(PropertyNames.Amount10, ControlInfoPropertyNames.DisplayName, L10nStrings.BackColor);
-            configUI.SetPropertyControlType(PropertyNames.Amount10, PropertyControlType.ColorWheel);
+            configUI.SetPropertyControlValue(PropertyNames.Offset, ControlInfoPropertyNames.StaticImageUnderlay, imageResource9);
+            configUI.SetPropertyControlValue(PropertyNames.BackColor, ControlInfoPropertyNames.DisplayName, L10nStrings.BackColor);
+            configUI.SetPropertyControlType(PropertyNames.BackColor, PropertyControlType.ColorWheel);
 
             return configUI;
         }
 
         protected override void OnSetRenderInfo(PropertyBasedEffectConfigToken newToken, RenderArgs dstArgs, RenderArgs srcArgs)
         {
-            Amount1 = newToken.GetProperty<StringProperty>(PropertyNames.Amount1).Value;
-            Amount2 = newToken.GetProperty<Int32Property>(PropertyNames.Amount2).Value;
-            Amount3 = newToken.GetProperty<Int32Property>(PropertyNames.Amount3).Value;
-            FontFamily Amount4FontFamily = (FontFamily)newToken.GetProperty<StaticListChoiceProperty>(PropertyNames.Amount4).Value;
+            Amount1 = newToken.GetProperty<StringProperty>(PropertyNames.Text).Value;
+            Amount2 = newToken.GetProperty<Int32Property>(PropertyNames.TextRepeat).Value;
+            Amount3 = newToken.GetProperty<Int32Property>(PropertyNames.FontSize).Value;
+            FontFamily Amount4FontFamily = (FontFamily)newToken.GetProperty<StaticListChoiceProperty>(PropertyNames.Font).Value;
             Amount4 = new FontFamily(Amount4FontFamily.Name);
-            Amount5 = newToken.GetProperty<BooleanProperty>(PropertyNames.Amount5).Value;
-            Amount6 = newToken.GetProperty<BooleanProperty>(PropertyNames.Amount6).Value;
-            Amount7 = newToken.GetProperty<BooleanProperty>(PropertyNames.Amount7).Value;
-            Amount8 = newToken.GetProperty<BooleanProperty>(PropertyNames.Amount8).Value;
-            Amount9 = newToken.GetProperty<DoubleVectorProperty>(PropertyNames.Amount9).Value;
-            Amount10 = ColorBgra.FromOpaqueInt32(newToken.GetProperty<Int32Property>(PropertyNames.Amount10).Value);
+            Amount5 = newToken.GetProperty<BooleanProperty>(PropertyNames.Bold).Value;
+            Amount6 = newToken.GetProperty<BooleanProperty>(PropertyNames.Italic).Value;
+            Amount7 = newToken.GetProperty<BooleanProperty>(PropertyNames.Underline).Value;
+            Amount8 = newToken.GetProperty<BooleanProperty>(PropertyNames.Strikeout).Value;
+            Amount9 = newToken.GetProperty<DoubleVectorProperty>(PropertyNames.Offset).Value;
+            Amount10 = ColorBgra.FromOpaqueInt32(newToken.GetProperty<Int32Property>(PropertyNames.BackColor).Value);
 
             Rectangle selection = EnvironmentParameters.GetSelection(srcArgs.Surface.Bounds).GetBoundsInt();
             RectangleF textRect = new RectangleF((float)Amount9.First * selection.Width + selection.Left, (float)Amount9.Second * selection.Height + selection.Top, selection.Width, selection.Height);
