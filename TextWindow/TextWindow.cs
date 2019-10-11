@@ -25,6 +25,9 @@ namespace TextWindowEffect
     [PluginSupportInfo(typeof(PluginSupportInfo))]
     public class TextWindowEffectPlugin : PropertyBasedEffect
     {
+        private ColorBgra backColor = ColorBgra.Zero;
+        private Surface textSurface;
+
         private static readonly Image StaticIcon = new Bitmap(typeof(TextWindowEffectPlugin), "TextWindow.png");
 
         public TextWindowEffectPlugin()
@@ -104,44 +107,51 @@ namespace TextWindowEffect
 
         protected override void OnSetRenderInfo(PropertyBasedEffectConfigToken newToken, RenderArgs dstArgs, RenderArgs srcArgs)
         {
-            Amount1 = newToken.GetProperty<StringProperty>(PropertyNames.Text).Value;
-            Amount2 = newToken.GetProperty<Int32Property>(PropertyNames.TextRepeat).Value;
-            Amount3 = newToken.GetProperty<Int32Property>(PropertyNames.FontSize).Value;
-            Amount4 = (FontFamily)newToken.GetProperty<StaticListChoiceProperty>(PropertyNames.Font).Value;
-            Amount5 = newToken.GetProperty<BooleanProperty>(PropertyNames.Bold).Value;
-            Amount6 = newToken.GetProperty<BooleanProperty>(PropertyNames.Italic).Value;
-            Amount7 = newToken.GetProperty<BooleanProperty>(PropertyNames.Underline).Value;
-            Amount8 = newToken.GetProperty<BooleanProperty>(PropertyNames.Strikeout).Value;
-            Amount9 = newToken.GetProperty<DoubleVectorProperty>(PropertyNames.Offset).Value;
-            Amount10 = ColorBgra.FromOpaqueInt32(newToken.GetProperty<Int32Property>(PropertyNames.BackColor).Value);
+            string text = newToken.GetProperty<StringProperty>(PropertyNames.Text).Value + " ";
+            int textRepeat = newToken.GetProperty<Int32Property>(PropertyNames.TextRepeat).Value;
+            int fontSize = newToken.GetProperty<Int32Property>(PropertyNames.FontSize).Value;
+            FontFamily fontFam = (FontFamily)newToken.GetProperty<StaticListChoiceProperty>(PropertyNames.Font).Value;
+            bool bold = newToken.GetProperty<BooleanProperty>(PropertyNames.Bold).Value;
+            bool italic = newToken.GetProperty<BooleanProperty>(PropertyNames.Italic).Value;
+            bool underline = newToken.GetProperty<BooleanProperty>(PropertyNames.Underline).Value;
+            bool strikeout = newToken.GetProperty<BooleanProperty>(PropertyNames.Strikeout).Value;
+            Pair<double, double> offset = newToken.GetProperty<DoubleVectorProperty>(PropertyNames.Offset).Value;
+            this.backColor = ColorBgra.FromOpaqueInt32(newToken.GetProperty<Int32Property>(PropertyNames.BackColor).Value);
 
             Rectangle selection = EnvironmentParameters.GetSelection(srcArgs.Surface.Bounds).GetBoundsInt();
-            RectangleF textRect = new RectangleF((float)Amount9.First * selection.Width + selection.Left, (float)Amount9.Second * selection.Height + selection.Top, selection.Width, selection.Height);
+            RectangleF textRect = new RectangleF(
+                (float)offset.First * selection.Width + selection.Left,
+                (float)offset.Second * selection.Height + selection.Top,
+                selection.Width,
+                selection.Height);
 
-            string text = Amount1 + " ";
             System.Text.StringBuilder textRepeated = new System.Text.StringBuilder();
-            for (int i = 0; i < Amount2; i++)
+            for (int i = 0; i < textRepeat; i++)
             {
                 textRepeated.Append(text);
             }
 
-            if (textSurface == null)
-                textSurface = new Surface(srcArgs.Surface.Size);
+            if (this.textSurface == null)
+            {
+                this.textSurface = new Surface(srcArgs.Surface.Size);
+            }
             else
-                textSurface.Clear(Color.Transparent);
+            {
+                this.textSurface.Clear(Color.Transparent);
+            }
 
-            using (Graphics g = new RenderArgs(textSurface).Graphics)
+            using (Graphics g = new RenderArgs(this.textSurface).Graphics)
             {
                 g.TextRenderingHint = TextRenderingHint.AntiAlias;
 
                 FontStyle fontStyle = FontStyle.Regular;
-                if (Amount5) fontStyle |= FontStyle.Bold;
-                if (Amount6) fontStyle |= FontStyle.Italic;
-                if (Amount7) fontStyle |= FontStyle.Underline;
-                if (Amount8) fontStyle |= FontStyle.Strikeout;
+                if (bold) fontStyle |= FontStyle.Bold;
+                if (italic) fontStyle |= FontStyle.Italic;
+                if (underline) fontStyle |= FontStyle.Underline;
+                if (strikeout) fontStyle |= FontStyle.Strikeout;
 
                 using (SolidBrush fontBrush = new SolidBrush(Color.Black))
-                using (Font font = new Font(Amount4, Amount3, fontStyle))
+                using (Font font = new Font(fontFam, fontSize, fontStyle))
                 {
                     g.DrawString(textRepeated.ToString(), font, fontBrush, textRect);
                 }
@@ -159,29 +169,16 @@ namespace TextWindowEffect
             }
         }
 
-        private string Amount1 = ""; // [0,255] Text
-        private int Amount2 = 100; // [1,1000] Text Repeat
-        private int Amount3 = 12; // [6,250] Font Size
-        private FontFamily Amount4 = new FontFamily("Arial"); // Font
-        private bool Amount5 = false; // [0,1] Bold
-        private bool Amount6 = false; // [0,1] Italic
-        private bool Amount7 = false; // [0,1] Underline
-        private bool Amount8 = false; // [0,1] Strikeout
-        private Pair<double, double> Amount9 = Pair.Create(0.0, 0.0); // Offset
-        private ColorBgra Amount10 = ColorBgra.FromBgr(0, 0, 0); // Background Color
-
-        private Surface textSurface;
-
         private void Render(Surface dst, Surface src, Rectangle rect)
         {
-            ColorBgra CurrentPixel = Amount10;
+            ColorBgra CurrentPixel = this.backColor;
 
             for (int y = rect.Top; y < rect.Bottom; y++)
             {
                 if (IsCancelRequested) return;
                 for (int x = rect.Left; x < rect.Right; x++)
                 {
-                    CurrentPixel.A = Int32Util.ClampToByte(byte.MaxValue - textSurface[x, y].A);
+                    CurrentPixel.A = Int32Util.ClampToByte(byte.MaxValue - this.textSurface[x, y].A);
                     dst[x, y] = CurrentPixel;
                 }
             }
