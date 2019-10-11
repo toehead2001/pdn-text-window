@@ -28,7 +28,7 @@ namespace TextWindowEffect
         private static readonly Image StaticIcon = new Bitmap(typeof(TextWindowEffectPlugin), "TextWindow.png");
 
         public TextWindowEffectPlugin()
-            : base(L10nStrings.EffectName, StaticIcon, L10nStrings.EffectMenu, EffectFlags.Configurable)
+            : base(L10nStrings.EffectName, StaticIcon, L10nStrings.EffectMenu, new EffectOptions { Flags = EffectFlags.Configurable })
         {
         }
 
