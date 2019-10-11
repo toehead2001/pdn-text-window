@@ -107,8 +107,7 @@ namespace TextWindowEffect
             Amount1 = newToken.GetProperty<StringProperty>(PropertyNames.Text).Value;
             Amount2 = newToken.GetProperty<Int32Property>(PropertyNames.TextRepeat).Value;
             Amount3 = newToken.GetProperty<Int32Property>(PropertyNames.FontSize).Value;
-            FontFamily Amount4FontFamily = (FontFamily)newToken.GetProperty<StaticListChoiceProperty>(PropertyNames.Font).Value;
-            Amount4 = new FontFamily(Amount4FontFamily.Name);
+            Amount4 = (FontFamily)newToken.GetProperty<StaticListChoiceProperty>(PropertyNames.Font).Value;
             Amount5 = newToken.GetProperty<BooleanProperty>(PropertyNames.Bold).Value;
             Amount6 = newToken.GetProperty<BooleanProperty>(PropertyNames.Italic).Value;
             Amount7 = newToken.GetProperty<BooleanProperty>(PropertyNames.Underline).Value;
