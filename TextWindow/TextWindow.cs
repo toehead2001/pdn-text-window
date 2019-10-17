@@ -51,7 +51,7 @@ namespace TextWindowEffect
 
         protected override PropertyCollection OnCreatePropertyCollection()
         {
-            List<Property> props = new List<Property>
+            Property[] props = new Property[]
             {
                 new StringProperty(PropertyNames.Text, "", 255),
                 new Int32Property(PropertyNames.TextRepeat, 100, 1, 1000),
