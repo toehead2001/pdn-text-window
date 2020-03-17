@@ -2,11 +2,11 @@
 using System.Drawing;
 using System.Reflection;
 using System.Drawing.Text;
-using System.Collections.Generic;
 using PaintDotNet;
 using PaintDotNet.Effects;
 using PaintDotNet.IndirectUI;
 using PaintDotNet.PropertySystem;
+using System.Linq;
 
 namespace TextWindowEffect
 {
@@ -191,29 +191,24 @@ namespace TextWindowEffect
 
         internal static int FindFontIndex(string familyName)
         {
-            for (int i = 0; i < UsableFontFamilies.Length; i++)
+            int index = Array.FindIndex(UsableFontFamilies, font => font.Name.Equals(familyName, StringComparison.OrdinalIgnoreCase));
+
+            if (index < 0)
             {
-                if (UsableFontFamilies[i].Name.Equals(familyName, StringComparison.OrdinalIgnoreCase))
-                {
-                    return i;
-                }
+                index = 0;
             }
 
-            return 0;
+            return index;
         }
 
         static FontUtil()
         {
-            List<FontFamily> usableFonts = new List<FontFamily>();
             using (InstalledFontCollection intstalledFonts = new InstalledFontCollection())
             {
-                foreach (FontFamily font in intstalledFonts.Families)
-                {
-                    if (font.IsStyleAvailable(FontStyle.Regular & FontStyle.Bold & FontStyle.Italic & FontStyle.Underline & FontStyle.Strikeout))
-                        usableFonts.Add(font);
-                }
+                UsableFontFamilies = intstalledFonts.Families
+                    .Where(font => font.IsStyleAvailable(FontStyle.Regular & FontStyle.Bold & FontStyle.Italic & FontStyle.Underline & FontStyle.Strikeout))
+                    .ToArray();
             }
-            UsableFontFamilies = usableFonts.ToArray();
         }
     }
 }
