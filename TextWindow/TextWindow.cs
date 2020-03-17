@@ -96,7 +96,7 @@ namespace TextWindowEffect
             configUI.SetPropertyControlValue(PropertyNames.Offset, ControlInfoPropertyNames.SliderSmallChangeY, 0.05);
             configUI.SetPropertyControlValue(PropertyNames.Offset, ControlInfoPropertyNames.SliderLargeChangeY, 0.25);
             configUI.SetPropertyControlValue(PropertyNames.Offset, ControlInfoPropertyNames.UpDownIncrementY, 0.01);
-            Rectangle selection9 = EnvironmentParameters.GetSelection(EnvironmentParameters.SourceSurface.Bounds).GetBoundsInt();
+            Rectangle selection9 = EnvironmentParameters.SelectionBounds;
             ImageResource imageResource9 = ImageResource.FromImage(EnvironmentParameters.SourceSurface.CreateAliasedBitmap(selection9));
             configUI.SetPropertyControlValue(PropertyNames.Offset, ControlInfoPropertyNames.StaticImageUnderlay, imageResource9);
             configUI.SetPropertyControlValue(PropertyNames.BackColor, ControlInfoPropertyNames.DisplayName, L10nStrings.BackColor);
@@ -118,7 +118,7 @@ namespace TextWindowEffect
             Pair<double, double> offset = newToken.GetProperty<DoubleVectorProperty>(PropertyNames.Offset).Value;
             this.backColor = ColorBgra.FromOpaqueInt32(newToken.GetProperty<Int32Property>(PropertyNames.BackColor).Value);
 
-            Rectangle selection = EnvironmentParameters.GetSelection(srcArgs.Surface.Bounds).GetBoundsInt();
+            Rectangle selection = EnvironmentParameters.SelectionBounds;
             RectangleF textRect = new RectangleF(
                 (float)offset.First * selection.Width + selection.Left,
                 (float)offset.Second * selection.Height + selection.Top,
