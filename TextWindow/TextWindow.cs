@@ -1,12 +1,12 @@
-﻿using System;
-using System.Drawing;
-using System.Reflection;
-using System.Drawing.Text;
-using PaintDotNet;
+﻿using PaintDotNet;
 using PaintDotNet.Effects;
 using PaintDotNet.IndirectUI;
 using PaintDotNet.PropertySystem;
+using System;
+using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
+using System.Reflection;
 
 namespace TextWindowEffect
 {
